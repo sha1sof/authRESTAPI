@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/sha1sof/authRESTAPI/internal/config"
+	"github.com/sha1sof/authRESTAPI/internal/storage"
 	"log/slog"
 	"os"
 )
@@ -17,6 +18,12 @@ func main() {
 	log := setupLogger(cfg.Env)
 	log.Info("starting logger",
 		slog.String("env", cfg.Env))
+
+	db, err := storage.New(cfg)
+	if err != nil {
+		panic(err)
+	}
+	_ = db
 
 	//TODO: init storage
 
