@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/sha1sof/authRESTAPI/internal/config"
 	"github.com/sha1sof/authRESTAPI/internal/storage"
 	"log/slog"
@@ -19,13 +20,22 @@ func main() {
 	log.Info("starting logger",
 		slog.String("env", cfg.Env))
 
-	db, err := storage.New(cfg)
+	db, err := storage.New(cfg, log, cfg.Auth.Cost, cfg.Auth.Secret, cfg.Auth.TimeD)
 	if err != nil {
-		panic(err)
+		log.Error("failed to connect to database")
+		os.Exit(1)
 	}
-	_ = db
 
-	//TODO: init storage
+	_, err = db.RegisterUser("example@gmail.com", "123")
+	if err != nil {
+		log.Error("failed to register user")
+	}
+
+	token, _, err := db.LoginUser("example@gmail.com", "123")
+	if err != nil {
+		log.Error("failed to login")
+	}
+	fmt.Println(token)
 
 	//TODO: init server
 }

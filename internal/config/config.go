@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/ilyakaznacheev/cleanenv"
 	"os"
+	"time"
 )
 
 // Config represents the structure of the configuration file.
@@ -11,6 +12,7 @@ type Config struct {
 	Env      string `yaml:"env" env-default:"prod"`
 	Database Database
 	Server   Server
+	Auth     Auth
 }
 
 // Database configuration details.
@@ -27,6 +29,13 @@ type Database struct {
 // TODO: It may be necessary to supplement the parameters.
 type Server struct {
 	Port string `yaml:"port" env-default:"8080"`
+}
+
+// Auth configuration details.
+type Auth struct {
+	TimeD  time.Duration `yaml:"timeD" env-default:"1h"`
+	Secret string        `yaml:"secret" env-default:"secret"`
+	Cost   int           `yaml:"cost" env-default:"6"`
 }
 
 // MustLoadConfig loads the configuration from the specified path.
